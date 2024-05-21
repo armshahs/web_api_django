@@ -7,6 +7,8 @@ from django.contrib.auth.models import (
     UserManager,
 )
 
+from rest_framework_simplejwt.tokens import RefreshToken
+
 # Create your models here.
 
 
@@ -52,4 +54,5 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def tokens(self):
-        return ""
+        refresh = RefreshToken.for_user(self)
+        return {"refresh": str(refresh), "access": str(refresh.access_token)}
