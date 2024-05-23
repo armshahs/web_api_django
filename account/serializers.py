@@ -48,7 +48,20 @@ class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=20, min_length=6, write_only=True)
     username = serializers.CharField(max_length=255, min_length=3, read_only=True)
 
-    tokens = serializers.CharField(max_length=68, min_length=6, read_only=True)
+    # SerializerMethodField allows us to pass a method instead of the typical Charfield
+    # You can then define a function called get_tokens in the serializer. Also empty bracket of SerializerMethodField
+    # assumes that you are passing the get_tokens function.
+    # Now the output will be a dictionary instead of text "'refresh': '3213ddada213', 'access': 'adsad' "
+    # very difficult on the frontend to extract the refresh and access from above.
+    # It can be a nested dict but it should be of the format "refresh": "3213ddada213", "access": "adsad"
+    tokens = serializers.SerializerMethodField()
+
+    def get_tokens(self, obj):
+        user = User.objects.get(email=obj["email"])
+        return {
+            "refresh": user.tokens()["refresh"],
+            "access": user.tokens()["access"],
+        }
 
     class Meta:
         model = User
