@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 import environ
 
@@ -58,6 +59,11 @@ REST_FRAMEWORK = {
     # ]
 }
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+}
 
 # Application definition
 
@@ -74,6 +80,7 @@ INSTALLED_APPS = [
     # my apps
     "account",
     "expenses",
+    "incomes",
 ]
 
 MIDDLEWARE = [
